@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resources>
+    <!-- PLEASE KEEP THIS KEY IN SAFE PLACE -->
+    <string name="private_vendor_key"></string>
+</resources>
