@@ -3,26 +3,20 @@ package io.agora.openlive.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
-import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.SurfaceView;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import io.agora.external.FaceBeautify;
 import io.agora.openlive.R;
 import io.agora.openlive.model.AGEventHandler;
 import io.agora.openlive.model.ConstantApp;
 import io.agora.openlive.model.VideoStatusData;
+import io.agora.rtc.Constants;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +50,7 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
     }
 
     private boolean isBroadcaster(int cRole) {
-        return cRole == io.agora.rtc.Constants.CLIENT_ROLE_BROADCASTER;
+        return cRole == Constants.CLIENT_ROLE_DUAL_STREAM_BROADCASTER;
     }
 
     private boolean isBroadcaster() {
@@ -238,7 +232,6 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
 
         if (isBroadcaster) {
             rtcEngine().muteLocalAudioStream(false);
-            FaceBeautify.getInstance().setBeautify(12);
         } else {
             rtcEngine().muteLocalAudioStream(true);
         }

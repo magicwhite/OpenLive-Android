@@ -16,6 +16,7 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
+import io.agora.common.Constant;
 import io.agora.openlive.AGApplication;
 import io.agora.openlive.BuildConfig;
 import io.agora.openlive.model.ConstantApp;
@@ -188,7 +189,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void initVersionInfo() {
         String version = "V " + BuildConfig.VERSION_NAME + "(Build: " + BuildConfig.VERSION_CODE
-                + ", " + ConstantApp.APP_BUILD_DATE + ", SDK: " + ConstantApp.MEDIA_SDK_VERSION + ")";
+                + ", " + ConstantApp.APP_BUILD_DATE + ", SDK: " + Constant.MEDIA_SDK_VERSION + ")";
 //        TextView textVersion = (TextView) findViewById(R.id.app_version);
 //        textVersion.setText(version);
     }

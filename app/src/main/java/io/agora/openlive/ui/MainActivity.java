@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import io.agora.openlive.R;
 import io.agora.openlive.model.ConstantApp;
+import io.agora.rtc.Constants;
 
 public class MainActivity extends BaseActivity {
     @Override
@@ -73,13 +74,13 @@ public class MainActivity extends BaseActivity {
         builder.setNegativeButton(R.string.label_audience, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                MainActivity.this.forwardToLiveRoom(io.agora.rtc.Constants.CLIENT_ROLE_AUDIENCE);
+                MainActivity.this.forwardToLiveRoom(Constants.CLIENT_ROLE_DUAL_STREAM_AUDIENCE);
             }
         });
         builder.setPositiveButton(R.string.label_broadcaster, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                MainActivity.this.forwardToLiveRoom(io.agora.rtc.Constants.CLIENT_ROLE_BROADCASTER);
+                MainActivity.this.forwardToLiveRoom(Constants.CLIENT_ROLE_DUAL_STREAM_BROADCASTER);
             }
         });
         AlertDialog dialog = builder.create();

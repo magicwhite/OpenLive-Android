@@ -4,18 +4,7 @@ import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 
 public class ConstantApp {
-    public static final String MEDIA_SDK_VERSION;
-
     public static final String APP_BUILD_DATE = "today";
-
-    static {
-        String sdk = "undefined";
-        try {
-            sdk = RtcEngine.getSdkVersion();
-        } catch (Throwable e) {
-        }
-        MEDIA_SDK_VERSION = sdk;
-    }
 
     public static final int BASE_VALUE_PERMISSION = 0X0001;
     public static final int PERMISSION_REQ_ID_RECORD_AUDIO = BASE_VALUE_PERMISSION + 1;

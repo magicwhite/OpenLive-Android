@@ -23,8 +23,7 @@ android {
     }
     sourceSets {
         main {
-            jniLibs.srcDirs = ['libs']
-            jni.srcDirs = [] //disable automatic ndk-build call
+            jniLibs.srcDirs = ['src/main/libs']
         }
     }
 }
@@ -40,4 +39,13 @@ dependencies {
         // workaround issue #73
         exclude group: 'com.google.android', module: 'android'
     }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+dependencies {
+    compile(name:'videoprp', ext:'aar')
 }
