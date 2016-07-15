@@ -3,6 +3,7 @@ package io.agora.openlive.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -245,6 +246,33 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
         doRemoveRemoteUi(uid);
     }
 
+    private void requestRemoteStreamType(final int currentHostCount) {
+        log.debug("requestRemoteStreamType " + currentHostCount);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                HashMap.Entry<Integer, SoftReference<SurfaceView>> highest = null;
+                for (HashMap.Entry<Integer, SoftReference<SurfaceView>> pair : mUidsList.entrySet()) {
+                    log.debug("requestRemoteStreamType " + currentHostCount + " local " + (config().mUid & 0xFFFFFFFFL) + " " + (pair.getKey() & 0xFFFFFFFFL) + " " + pair.getValue().get().getHeight() + " " + pair.getValue().get().getWidth());
+                    if (pair.getKey() != config().mUid && (highest == null || highest.getValue().get().getHeight() < pair.getValue().get().getHeight())) {
+                        if (highest != null) {
+                            rtcEngine().setRemoteVideoStreamType(highest.getKey(), Constants.VIDEO_STREAM_LOW);
+                            log.debug("setRemoteVideoStreamType switch highest VIDEO_STREAM_LOW " + currentHostCount + " " + (highest.getKey() & 0xFFFFFFFFL) + " " + highest.getValue().get().getWidth() + " " + highest.getValue().get().getHeight());
+                        }
+                        highest = pair;
+                    } else if (pair.getKey() != config().mUid && (highest != null && highest.getValue().get().getHeight() >= pair.getValue().get().getHeight())) {
+                        rtcEngine().setRemoteVideoStreamType(pair.getKey(), Constants.VIDEO_STREAM_LOW);
+                        log.debug("setRemoteVideoStreamType VIDEO_STREAM_LOW " + currentHostCount + " " + (pair.getKey() & 0xFFFFFFFFL) + " " + pair.getValue().get().getWidth() + " " + pair.getValue().get().getHeight());
+                    }
+                }
+                if (highest != null && highest.getKey() != 0) {
+                    rtcEngine().setRemoteVideoStreamType(highest.getKey(), Constants.VIDEO_STREAM_HIGH);
+                    log.debug("setRemoteVideoStreamType VIDEO_STREAM_HIGH " + currentHostCount + " " + (highest.getKey() & 0xFFFFFFFFL) + " " + highest.getValue().get().getWidth() + " " + highest.getValue().get().getHeight());
+                }
+            }
+        }, 500);
+    }
+
     private void doRemoveRemoteUi(final int uid) {
         runOnUiThread(new Runnable() {
             @Override
@@ -273,6 +301,18 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
         mGridVideoViewContainer.initViewContainer(getApplicationContext(), config().mUid, mUidsList);
 
         mViewType = VIEW_TYPE_DEFAULT;
+
+        int sizeLimit = mUidsList.size();
+        if (sizeLimit > ConstantApp.MAX_PEER_COUNT + 1) {
+            sizeLimit = ConstantApp.MAX_PEER_COUNT + 1;
+        }
+        for (int i = 0; i < sizeLimit; i++) {
+            int uid = mGridVideoViewContainer.getItem(i).mUid;
+            if (config().mUid != uid) {
+                rtcEngine().setRemoteVideoStreamType(uid, Constants.VIDEO_STREAM_HIGH);
+                log.debug("setRemoteVideoStreamType VIDEO_STREAM_HIGH " + mUidsList.size() + " " + (uid & 0xFFFFFFFFL));
+            }
+        }
     }
 
     private void switchToSmallVideoView(int uid) {
@@ -283,6 +323,8 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
         bindToSmallVideoView(uid);
 
         mViewType = VIEW_TYPE_SMALL;
+
+        requestRemoteStreamType(mUidsList.size());
     }
 
     public int mViewType = VIEW_TYPE_DEFAULT;
