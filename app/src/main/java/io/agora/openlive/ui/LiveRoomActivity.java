@@ -2,6 +2,7 @@ package io.agora.openlive.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -87,6 +88,7 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
 
         ImageView button1 = (ImageView) findViewById(R.id.btn_1);
         ImageView button2 = (ImageView) findViewById(R.id.btn_2);
+        ImageView button3 = (ImageView) findViewById(R.id.btn_3);
 
         if (isBroadcaster(cRole)) {
             SurfaceView surfaceV = RtcEngine.CreateRendererView(getApplicationContext());
@@ -98,37 +100,77 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
 
             mGridVideoViewContainer.initViewContainer(getApplicationContext(), 0, mUidsList); // first is now full view
             worker().preview(true, surfaceV, 0);
-
-            button1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    worker().getRtcEngine().switchCamera();
-                }
-            });
-
-            button2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Object tag = v.getTag();
-                    boolean flag = true;
-                    if (tag != null && (boolean) tag) {
-                        flag = false;
-                    }
-                    worker().getRtcEngine().muteLocalAudioStream(flag);
-                    ImageView button = (ImageView) v;
-                    button.setTag(flag);
-                    button.setImageResource(flag ? R.drawable.btn_mute_cancel : R.drawable.btn_mute);
-                }
-            });
+            broadcasterUI(button1, button2, button3);
         } else {
-            button1.setVisibility(View.GONE);
-            button2.setVisibility(View.GONE);
+            audienceUI(button1, button2, button3);
         }
 
         worker().joinChannel(roomName, config().mUid);
 
         TextView textRoomName = (TextView) findViewById(R.id.room_name);
         textRoomName.setText(roomName);
+    }
+
+    private void broadcasterUI(ImageView button1, ImageView button2, ImageView button3) {
+        button1.setTag(true);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Object tag = v.getTag();
+                if (tag != null && (boolean) tag) {
+                    doSwitchToBroadcaster(false);
+                } else {
+                    doSwitchToBroadcaster(true);
+                }
+            }
+        });
+        button1.setColorFilter(getResources().getColor(R.color.agora_blue), PorterDuff.Mode.MULTIPLY);
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                worker().getRtcEngine().switchCamera();
+            }
+        });
+
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Object tag = v.getTag();
+                boolean flag = true;
+                if (tag != null && (boolean) tag) {
+                    flag = false;
+                }
+                worker().getRtcEngine().muteLocalAudioStream(flag);
+                ImageView button = (ImageView) v;
+                button.setTag(flag);
+                if (flag) {
+                    button.setColorFilter(getResources().getColor(R.color.agora_blue), PorterDuff.Mode.MULTIPLY);
+                } else {
+                    button.clearColorFilter();
+                }
+            }
+        });
+    }
+
+    private void audienceUI(ImageView button1, ImageView button2, ImageView button3) {
+        button1.setTag(null);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Object tag = v.getTag();
+                if (tag != null && (boolean) tag) {
+                    doSwitchToBroadcaster(false);
+                } else {
+                    doSwitchToBroadcaster(true);
+                }
+            }
+        });
+        button1.clearColorFilter();
+        button2.setVisibility(View.GONE);
+        button3.setTag(null);
+        button3.setVisibility(View.GONE);
+        button3.clearColorFilter();
     }
 
     private void doConfigEngine(int cRole) {
@@ -175,18 +217,72 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
         View topArea = findViewById(R.id.top_area);
         topArea.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
 
-        if (isBroadcaster()) {
-            View button1 = findViewById(R.id.btn_1);
-            button1.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
+        View button1 = findViewById(R.id.btn_1);
+        button1.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
 
-            View button2 = findViewById(R.id.btn_2);
+        View button2 = findViewById(R.id.btn_2);
+        View button3 = findViewById(R.id.btn_3);
+        if (isBroadcaster()) {
             button2.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
+            button3.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
+        } else {
+            button2.setVisibility(View.INVISIBLE);
+            button3.setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
     public void onFirstRemoteVideoDecoded(int uid, int width, int height, int elapsed) {
         doRenderRemoteUi(uid);
+    }
+
+    private void doSwitchToBroadcaster(boolean broadcaster) {
+        final int currentHostCount = mUidsList.size();
+        final int uid = config().mUid;
+        log.debug("doSwitchToBroadcaster " + currentHostCount + " " + (uid & 0XFFFFFFFFL) + " " + broadcaster);
+
+        if (broadcaster) {
+            doConfigEngine(Constants.CLIENT_ROLE_DUAL_STREAM_BROADCASTER);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doRenderRemoteUi(uid);
+
+                    ImageView button1 = (ImageView) findViewById(R.id.btn_1);
+                    ImageView button2 = (ImageView) findViewById(R.id.btn_2);
+                    ImageView button3 = (ImageView) findViewById(R.id.btn_3);
+                    broadcasterUI(button1, button2, button3);
+
+                    doShowButtons(false);
+                }
+            }, 1000); // wait for reconfig engine
+
+            rtcEngine().muteLocalVideoStream(false);
+            rtcEngine().muteLocalAudioStream(false);
+        } else {
+            stopInteraction(currentHostCount, uid);
+        }
+    }
+
+    private void stopInteraction(final int currentHostCount, final int uid) {
+        doConfigEngine(Constants.CLIENT_ROLE_DUAL_STREAM_AUDIENCE);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doRemoveRemoteUi(uid);
+
+                ImageView button1 = (ImageView) findViewById(R.id.btn_1);
+                ImageView button2 = (ImageView) findViewById(R.id.btn_2);
+                ImageView button3 = (ImageView) findViewById(R.id.btn_3);
+                audienceUI(button1, button2, button3);
+
+                doShowButtons(false);
+            }
+        }, 1000); // wait for reconfig engine
+
+        rtcEngine().muteLocalAudioStream(true);
     }
 
     private void doRenderRemoteUi(final int uid) {
@@ -197,16 +293,19 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
                 surfaceV.setZOrderOnTop(true);
                 surfaceV.setZOrderMediaOverlay(true);
                 mUidsList.put(uid, new SoftReference<>(surfaceV));
-                rtcEngine().setupRemoteVideo(new VideoCanvas(surfaceV, VideoCanvas.RENDER_MODE_HIDDEN, uid));
+                if (config().mUid == uid) {
+                    rtcEngine().setupLocalVideo(new VideoCanvas(surfaceV, VideoCanvas.RENDER_MODE_HIDDEN, uid));
+                } else {
+                    rtcEngine().setupRemoteVideo(new VideoCanvas(surfaceV, VideoCanvas.RENDER_MODE_HIDDEN, uid));
+                }
 
                 if (mViewType == VIEW_TYPE_DEFAULT) {
-                    log.debug("doRenderRemoteUi VIEW_TYPE_DEFAULT" + " " + uid);
+                    log.debug("doRenderRemoteUi VIEW_TYPE_DEFAULT" + " " + (uid & 0xFFFFFFFFL));
                     switchToDefaultVideoView();
                 } else {
-                    log.debug("doRenderRemoteUi VIEW_TYPE_SMALL" + " " + uid + " " + mSmallVideoViewAdapter.getExcepedUid());
-
-                    int bigBg = mSmallVideoViewAdapter.getExcepedUid();
-                    switchToSmallVideoView(bigBg);
+                    int bigBgUid = mSmallVideoViewAdapter.getExceptedUid();
+                    log.debug("doRenderRemoteUi VIEW_TYPE_SMALL" + " " + (uid & 0xFFFFFFFFL) + " " + (bigBgUid & 0xFFFFFFFFL));
+                    switchToSmallVideoView(bigBgUid);
                 }
             }
         });
@@ -242,7 +341,7 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
 
     @Override
     public void onUserOffline(int uid, int reason) {
-        log.debug("onUserOffline " + uid + " " + reason);
+        log.debug("onUserOffline " + (uid & 0xFFFFFFFFL) + " " + reason);
         doRemoveRemoteUi(uid);
     }
 
@@ -280,15 +379,17 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
                 mUidsList.remove(uid);
 
                 int bigBgUid = -1;
-                if (mSmallVideoViewAdapter != null)
-                    bigBgUid = mSmallVideoViewAdapter.getExcepedUid();
+                if (mSmallVideoViewAdapter != null) {
+                    bigBgUid = mSmallVideoViewAdapter.getExceptedUid();
+                }
 
-                log.debug("doRemoveRemoteUi " + uid + bigBgUid);
+                log.debug("doRemoveRemoteUi " + (uid & 0xFFFFFFFFL) + " " + (bigBgUid & 0xFFFFFFFFL));
 
-                if (mViewType == VIEW_TYPE_DEFAULT || uid == bigBgUid)
+                if (mViewType == VIEW_TYPE_DEFAULT || uid == bigBgUid) {
                     switchToDefaultVideoView();
-                else
+                } else {
                     switchToSmallVideoView(bigBgUid);
+                }
             }
         });
     }

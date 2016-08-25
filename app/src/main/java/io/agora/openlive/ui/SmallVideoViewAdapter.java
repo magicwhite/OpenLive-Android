@@ -55,7 +55,7 @@ public class SmallVideoViewAdapter extends VideoViewAdapter {
         notifyDataSetChanged();
     }
 
-    public int getExcepedUid() {
+    public int getExceptedUid() {
         return exceptedUid;
     }
 }
