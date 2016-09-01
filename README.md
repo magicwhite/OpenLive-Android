@@ -44,7 +44,7 @@ This demo shall be working only with [Agora](http://www.agora.io) interactive br
 
 [Agora](http://www.agora.io) has 100 data centers distributed globally. With the virtual network, the broadcasting experience are stable and smooth.
 
-[Agora](http://www.agora.io) Interactive Broadcasting SDK is available for iOS and Android, supporting RTMP and HLS. It enables bit rate auto adjustment to adapt to broadcasting under different bandwidth.
+[Agora](http://www.agora.io) Interactive Broadcasting SDK is available for iOS, Android, macOS and Windows, supporting RTMP and HLS. It enables bit rate auto adjustment to adapt to broadcasting under different bandwidth.
 
 This demo does not include broadcasting business server. Developers can build your own business server and interact with [Agora](http://www.agora.io) SDK.
 
@@ -52,7 +52,7 @@ This demo does not include broadcasting business server. Developers can build yo
 
 [声网Agora.io](http://cn.agora.io) 在全球部署了将近100个数据中心，加上lastmile算法，有超强抗丢包特点，可以保障全球范围稳定靠谱的直播体验。
 
-[声网Agora.io](http://cn.agora.io) 的客户端SDK，支持iOS和Android，支持RTMP、HLS协议。另外客户端SDK还支持码率自适应，以适应不同网络环境直播需求。支持美颜。
+[声网Agora.io](http://cn.agora.io) 的客户端SDK，支持iOS、Android、macOS和Windows，支持RTMP、HLS协议。另外客户端SDK还支持码率自适应，以适应不同网络环境直播需求。支持美颜。
 
 此Demo不涉及到直播业务服务器部分，此部分一般由开发者自行开发，然后和 [声网Agora.io](http://cn.agora.io) 直播服务交互。
 

@@ -1,7 +1,6 @@
 package io.agora.openlive.model;
 
 import io.agora.rtc.IRtcEngineEventHandler;
-import io.agora.rtc.RtcEngine;
 
 public class ConstantApp {
     public static final String APP_BUILD_DATE = "today";

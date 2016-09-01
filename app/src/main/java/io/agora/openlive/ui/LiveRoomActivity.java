@@ -289,6 +289,10 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (isFinishing()) {
+                    return;
+                }
+
                 SurfaceView surfaceV = RtcEngine.CreateRendererView(getApplicationContext());
                 surfaceV.setZOrderOnTop(true);
                 surfaceV.setZOrderMediaOverlay(true);
@@ -321,6 +325,10 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (isFinishing()) {
+                    return;
+                }
+
                 if (isBroadcaster) {
                     mUidsList.remove(0);
                     mUidsList.put(uid, new SoftReference<>(mGridVideoViewContainer.getSurfaceView(0))); // get first surface view
@@ -376,6 +384,10 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (isFinishing()) {
+                    return;
+                }
+
                 mUidsList.remove(uid);
 
                 int bigBgUid = -1;
