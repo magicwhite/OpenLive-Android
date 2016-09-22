@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class GridVideoViewContainerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final static Logger log = LoggerFactory.getLogger(GridVideoViewContainerAdapter.class);
@@ -34,9 +35,7 @@ public class GridVideoViewContainerAdapter extends RecyclerView.Adapter<Recycler
 
         mUsers = new ArrayList<>();
 
-        mLocalUid = localUid;
-
-        init(uids, false);
+        init(uids, localUid, false);
     }
 
     protected int mItemWidth;
@@ -52,14 +51,41 @@ public class GridVideoViewContainerAdapter extends RecyclerView.Adapter<Recycler
         return mLocalUid;
     }
 
-    public void init(HashMap<Integer, SoftReference<SurfaceView>> uids, boolean force) {
-        mUsers.clear();
-
+    public void init(HashMap<Integer, SoftReference<SurfaceView>> uids, int localUid, boolean force) {
         for (HashMap.Entry<Integer, SoftReference<SurfaceView>> entry : uids.entrySet()) {
             if (entry.getKey() == 0 || entry.getKey() == mLocalUid) {
-                mUsers.add(0, new VideoStatusData(entry.getKey(), entry.getValue(), VideoStatusData.DEFAULT_STATUS, VideoStatusData.DEFAULT_VOLUME));
+                boolean found = false;
+                for (VideoStatusData status : mUsers) {
+                    if ((status.mUid == entry.getKey() && status.mUid == 0) || status.mUid == mLocalUid) { // first time
+                        status.mUid = mLocalUid;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    mUsers.add(0, new VideoStatusData(mLocalUid, entry.getValue(), VideoStatusData.DEFAULT_STATUS, VideoStatusData.DEFAULT_VOLUME));
+                }
             } else {
-                mUsers.add(new VideoStatusData(entry.getKey(), entry.getValue(), VideoStatusData.DEFAULT_STATUS, VideoStatusData.DEFAULT_VOLUME));
+                boolean found = false;
+                for (VideoStatusData status : mUsers) {
+                    if (status.mUid == entry.getKey()) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    mUsers.add(new VideoStatusData(entry.getKey(), entry.getValue(), VideoStatusData.DEFAULT_STATUS, VideoStatusData.DEFAULT_VOLUME));
+                }
+            }
+        }
+
+        Iterator<VideoStatusData> it = mUsers.iterator();
+        while (it.hasNext()) {
+            VideoStatusData status = it.next();
+
+            if (uids.get(status.mUid) == null) {
+                log.warn("after_changed remove not exited members " + (status.mUid & 0xFFFFFFFFL) + " " + status.mView);
+                it.remove();
             }
         }
 

@@ -2,15 +2,16 @@ package io.agora.openlive.ui;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-import io.agora.openlive.model.VideoStatusData;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
+
+import io.agora.openlive.model.VideoStatusData;
 
 public class SmallVideoViewAdapter extends VideoViewAdapter {
     private final static Logger log = LoggerFactory.getLogger(SmallVideoViewAdapter.class);
@@ -43,7 +44,7 @@ public class SmallVideoViewAdapter extends VideoViewAdapter {
         mUsers.clear();
 
         for (HashMap.Entry<Integer, SoftReference<SurfaceView>> entry : uids.entrySet()) {
-            Log.d("VideoViewAdapter ", " notifyUiChanged " + entry.getKey() + " " + uidExcluded);
+            log.debug("notifyUiChanged " + entry.getKey() + " " + uidExcluded);
 
             if (entry.getKey() != uidExcluded) {
                 entry.getValue().get().setZOrderOnTop(true);

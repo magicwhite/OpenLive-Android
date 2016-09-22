@@ -2,5 +2,5 @@
 
 <resources>
     <!-- PLEASE KEEP THIS KEY IN SAFE PLACE -->
-    <string name="private_vendor_key"></string>
+    <string name="private_vendor_key"><#YOUR VENDOR KEY#></string>
 </resources>

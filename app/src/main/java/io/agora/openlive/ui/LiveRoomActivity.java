@@ -316,12 +316,7 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
     }
 
     @Override
-    public void onJoinChannelSuccess(String channel, final int uid, int elapsed) {
-        final boolean isBroadcaster = isBroadcaster();
-        log.debug("onJoinChannelSuccess " + channel + " " + uid + " " + elapsed + " " + isBroadcaster);
-
-        worker().getEngineConfig().mUid = uid;
-
+    public void onJoinChannelSuccess(final String channel, final int uid, final int elapsed) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -329,22 +324,30 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
                     return;
                 }
 
-                if (isBroadcaster) {
-                    mUidsList.remove(0);
-                    mUidsList.put(uid, new SoftReference<>(mGridVideoViewContainer.getSurfaceView(0))); // get first surface view
-
-                    mGridVideoViewContainer.initViewContainer(getApplicationContext(), uid, mUidsList); // first is now full view
+                if (mUidsList.containsKey(uid)) {
+                    log.debug("already added to UI, ignore it " + (uid & 0xFFFFFFFFL) + " " + mUidsList.get(uid));
+                    return;
                 }
+
+                final boolean isBroadcaster = isBroadcaster();
+                log.debug("onJoinChannelSuccess " + channel + " " + uid + " " + elapsed + " " + isBroadcaster);
+
+                worker().getEngineConfig().mUid = uid;
+
+                SoftReference<SurfaceView> surfaceV = mUidsList.remove(0);
+                if (surfaceV != null) {
+                    mUidsList.put(uid, surfaceV);
+                }
+
+                if (isBroadcaster) {
+                    rtcEngine().muteLocalAudioStream(false);
+                } else {
+                    rtcEngine().muteLocalAudioStream(true);
+                }
+
+                worker().getRtcEngine().setEnableSpeakerphone(true);
             }
         });
-
-        if (isBroadcaster) {
-            rtcEngine().muteLocalAudioStream(false);
-        } else {
-            rtcEngine().muteLocalAudioStream(true);
-        }
-
-        worker().getRtcEngine().setEnableSpeakerphone(true);
     }
 
     @Override

@@ -47,7 +47,7 @@ public class GridVideoViewContainer extends RecyclerView {
 
         if (!newCreated) {
             mGridVideoViewContainerAdapter.setLocalUid(localUid);
-            mGridVideoViewContainerAdapter.init(uids, true);
+            mGridVideoViewContainerAdapter.init(uids, localUid, true);
         }
 
         this.setAdapter(mGridVideoViewContainerAdapter);
