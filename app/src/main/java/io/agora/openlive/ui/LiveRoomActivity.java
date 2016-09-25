@@ -52,7 +52,7 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
     }
 
     private boolean isBroadcaster(int cRole) {
-        return cRole == Constants.CLIENT_ROLE_DUAL_STREAM_BROADCASTER;
+        return cRole == Constants.CLIENT_ROLE_BROADCASTER;
     }
 
     private boolean isBroadcaster() {
@@ -242,7 +242,7 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
         log.debug("doSwitchToBroadcaster " + currentHostCount + " " + (uid & 0XFFFFFFFFL) + " " + broadcaster);
 
         if (broadcaster) {
-            doConfigEngine(Constants.CLIENT_ROLE_DUAL_STREAM_BROADCASTER);
+            doConfigEngine(Constants.CLIENT_ROLE_BROADCASTER);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -266,7 +266,7 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
     }
 
     private void stopInteraction(final int currentHostCount, final int uid) {
-        doConfigEngine(Constants.CLIENT_ROLE_DUAL_STREAM_AUDIENCE);
+        doConfigEngine(Constants.CLIENT_ROLE_AUDIENCE);
 
         new Handler().postDelayed(new Runnable() {
             @Override

@@ -74,13 +74,13 @@ public class MainActivity extends BaseActivity {
         builder.setNegativeButton(R.string.label_audience, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                MainActivity.this.forwardToLiveRoom(Constants.CLIENT_ROLE_DUAL_STREAM_AUDIENCE);
+                MainActivity.this.forwardToLiveRoom(Constants.CLIENT_ROLE_AUDIENCE);
             }
         });
         builder.setPositiveButton(R.string.label_broadcaster, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                MainActivity.this.forwardToLiveRoom(Constants.CLIENT_ROLE_DUAL_STREAM_BROADCASTER);
+                MainActivity.this.forwardToLiveRoom(Constants.CLIENT_ROLE_BROADCASTER);
             }
         });
         AlertDialog dialog = builder.create();

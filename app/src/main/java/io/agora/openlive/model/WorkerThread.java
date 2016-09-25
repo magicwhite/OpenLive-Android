@@ -116,7 +116,7 @@ public class WorkerThread extends Thread {
     private AgoraYuvEnhancer mVideoEnhancer = null;
 
     public final void enablePreProcessor() {
-        if (mEngineConfig.mClientRole == Constants.CLIENT_ROLE_DUAL_STREAM_BROADCASTER) {
+        if (mEngineConfig.mClientRole == Constants.CLIENT_ROLE_BROADCASTER) {
             if (Constant.PRP_ENABLED) {
                 if (mVideoEnhancer == null) {
                     mVideoEnhancer = new AgoraYuvEnhancer(mContext);
@@ -129,7 +129,7 @@ public class WorkerThread extends Thread {
     }
 
     public final void setPreParameters(float lightness, int smoothness) {
-        if (mEngineConfig.mClientRole == Constants.CLIENT_ROLE_DUAL_STREAM_BROADCASTER) {
+        if (mEngineConfig.mClientRole == Constants.CLIENT_ROLE_BROADCASTER) {
             if (Constant.PRP_ENABLED) {
                 if (mVideoEnhancer == null) {
                     mVideoEnhancer = new AgoraYuvEnhancer(mContext);
@@ -217,7 +217,7 @@ public class WorkerThread extends Thread {
         mEngineConfig.mClientRole = cRole;
         mEngineConfig.mVideoProfile = vProfile;
 
-        mRtcEngine.setVideoProfile(mEngineConfig.mVideoProfile);
+        mRtcEngine.setVideoProfile(mEngineConfig.mVideoProfile, false);
 
         mRtcEngine.setClientRole(cRole);
 
@@ -251,11 +251,12 @@ public class WorkerThread extends Thread {
 
     private RtcEngine ensureRtcEngineReadyLock() {
         if (mRtcEngine == null) {
-            String vendorKey = mContext.getString(R.string.private_vendor_key);
-            if (TextUtils.isEmpty(vendorKey)) {
-                throw new RuntimeException("NEED TO use your vendor key, get your own key at https://dashboard.agora.io/");
+            String appId = mContext.getString(R.string.private_app_id);
+            if (TextUtils.isEmpty(appId)) {
+                throw new RuntimeException("NEED TO use your App ID, get your own ID at https://dashboard.agora.io/");
             }
-            mRtcEngine = RtcEngineEx.create(mContext, vendorKey, Constants.APP_CATEGORY_LIVE_BROADCASTING, mEngineEventHandler.mRtcEventHandler);
+            mRtcEngine = RtcEngineEx.create(mContext, appId, mEngineEventHandler.mRtcEventHandler);
+            mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
             mRtcEngine.enableVideo();
             mRtcEngine.setParameters(String.format(Locale.US, "{\"rtc.log_file\":\"%s\"}", Environment.getExternalStorageDirectory()
                     + File.separator + mContext.getPackageName() + "/log/agora-rtc.log"));
