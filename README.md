@@ -80,11 +80,11 @@ We use `Gradle` to build, if you want know more about `Gradle`, follow instructi
 NOTICE: before building, you need to
 
 
-1. update your key at app/src/main/res/values/strings_config.xml
+1. update your App ID at app/src/main/res/values/strings_config.xml
 
-	private_vendor_key
+	private_app_id
 
-	you can get your vendor key at https://dashboard.agora.io/
+	you can get your own ID at https://dashboard.agora.io/
 
 
 2. update libraries at app/libs

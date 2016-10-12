@@ -128,7 +128,7 @@ public class WorkerThread extends Thread {
         }
     }
 
-    public final void setPreParameters(float lightness, int smoothness) {
+    public final void setPreParameters(float lightness, float smoothness) {
         if (mEngineConfig.mClientRole == Constants.CLIENT_ROLE_BROADCASTER) {
             if (Constant.PRP_ENABLED) {
                 if (mVideoEnhancer == null) {
@@ -219,7 +219,7 @@ public class WorkerThread extends Thread {
 
         mRtcEngine.setVideoProfile(mEngineConfig.mVideoProfile, false);
 
-        mRtcEngine.setClientRole(cRole);
+        mRtcEngine.setClientRole(cRole, "");
 
         log.debug("configEngine " + cRole + " " + mEngineConfig.mVideoProfile);
     }
