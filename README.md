@@ -87,13 +87,11 @@ NOTICE: before building, you need to
 	you can get your own ID at https://dashboard.agora.io/
 
 
-2. update libraries at app/libs
+2. update libraries at app/libs(*.jar), app/src/main/libs(*.so)
 
 
-3. build native codes(such as face beautify module, and you need to put generated *.so files under app/libs)
+3. update face beautify module(aar) at libvideoprp
 
-		cd app/src/main
-		ndk-build
 
 Gradle build instructions
 
