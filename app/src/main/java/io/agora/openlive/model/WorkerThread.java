@@ -217,7 +217,7 @@ public class WorkerThread extends Thread {
         mEngineConfig.mClientRole = cRole;
         mEngineConfig.mVideoProfile = vProfile;
 
-        mRtcEngine.setVideoProfile(mEngineConfig.mVideoProfile, false);
+        mRtcEngine.setVideoProfile(mEngineConfig.mVideoProfile, true);
 
         mRtcEngine.setClientRole(cRole, "");
 

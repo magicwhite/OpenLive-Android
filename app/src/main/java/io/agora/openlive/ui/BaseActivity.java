@@ -41,7 +41,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else {
+                    layout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
                 initUIandEvent();
             }
         });

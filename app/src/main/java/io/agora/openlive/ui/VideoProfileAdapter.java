@@ -8,22 +8,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import io.agora.openlive.R;
 
-/**
- * Created by szc on 25/6/2016.
- */
-public class ProfileAdapter extends RecyclerView.Adapter {
+public class VideoProfileAdapter extends RecyclerView.Adapter {
     private Context context;
 
     private int selected;
 
-    public ProfileAdapter(Context context, int selected) {
+    public VideoProfileAdapter(Context context, int selected) {
         this.context = context;
         this.selected = selected;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.profile_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.video_profile_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
         ProfileHolder ph = new ProfileHolder(v);

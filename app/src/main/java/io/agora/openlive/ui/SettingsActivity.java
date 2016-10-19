@@ -13,7 +13,7 @@ import io.agora.openlive.R;
 import io.agora.openlive.model.ConstantApp;
 
 public class SettingsActivity extends AppCompatActivity {
-    private ProfileAdapter profileAdapter;
+    private VideoProfileAdapter mVideoProfileAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +30,13 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         int prefIndex = pref.getInt(ConstantApp.PrefManager.PREF_PROPERTY_PROFILE_IDX, ConstantApp.DEFAULT_PROFILE_IDX);
 
-        profileAdapter = new ProfileAdapter(this, prefIndex);
-        profileAdapter.setHasStableIds(true);
+        mVideoProfileAdapter = new VideoProfileAdapter(this, prefIndex);
+        mVideoProfileAdapter.setHasStableIds(true);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         v_profiles.setLayoutManager(layoutManager);
 
-        v_profiles.setAdapter(profileAdapter);
+        v_profiles.setAdapter(mVideoProfileAdapter);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void doSaveProfile() {
-        int profileIndex = profileAdapter.getSelected();
+        int profileIndex = mVideoProfileAdapter.getSelected();
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = pref.edit();

@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "io.agora.openlive"
-        minSdkVersion 16
+        minSdkVersion 16 // JELLY_BEAN
         targetSdkVersion 24
         versionCode 8
         versionName "1.7.0"
