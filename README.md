@@ -27,7 +27,7 @@ This demo is featuring live interactive broadcasting with the following unique f
 3. Switch video stream free with different screen UI.
 4. Globally broadcasting.
 
-This demo shall be working only with [Agora](http://www.agora.io) interactive broadcasting SDK. Currently, the SDK is under invitation only testing. Please contact  <mailto:sales@agora.io>. Developers from China can call 400 632 6626.
+This demo shall be working only with [Agora](http://www.agora.io) interactive broadcasting SDK. Please contact  <mailto:sales@agora.io>. Developers from China can call 400 632 6626.
 
 这个Demo模拟的是一个有多人主播同时对话，并且对观众直播的App。主要有4个独特之处：
 
@@ -36,7 +36,7 @@ This demo shall be working only with [Agora](http://www.agora.io) interactive br
 3. 支持大小流切换，观众在多视窗观看时，可选择任意主播放大主屏观看；
 4. 支持全球范围的直播，跨国跨洲直播
 
-该Demo需要基于 [声网Agora.io](http://cn.agora.io) 的实时互动直播技术才能运行。现SDK正在邀请内测中。如有需求，请联系 <mailto:sales@agora.io>。中国用户可直接拨打400 632 6626。
+该Demo需要基于 [声网Agora.io](http://cn.agora.io) 的实时互动直播技术才能运行。如有需求，请联系 <mailto:sales@agora.io>。中国用户可直接拨打400 632 6626。
 
 ##Agora.io Interactive Broadcasting
 
@@ -64,14 +64,16 @@ This demo does not include broadcasting business server. Developers can build yo
 
 ## Build Instructions
 
-Android SDK/NDK tools need to be ready on you host machine, if you does not have them ready, follow instructions here:
+Java 8 SDK/AndroidAndroid SDK/NDK tools need to be ready on you host machine, if you does not have them ready, follow instructions here:
 
+* http://www.oracle.com/technetwork/java/javase/overview/index.html
 * https://developer.android.com/studio/index.html
 * https://developer.android.com/ndk/index.html
 
 
-We use `Gradle` to build, if you want know more about `Gradle`, follow instructions here:
+We use `Gradle`/`Jack and Jill` to build, if you want know more about `Gradle`/`Jack and Jill`, follow instructions here:
 
+* http://tools.android.com/tech-docs/jackandjill
 * https://developer.android.com/studio/build/index.html
 * http://gradle.org/getting-started-android-build/
 
@@ -87,10 +89,10 @@ NOTICE: before building, you need to
 	you can get your own ID at https://dashboard.agora.io/
 
 
-2. update libraries at app/libs(*.jar), app/src/main/libs(*.so)
+2. update libraries at app/libs(*.jar) and app/src/main/libs(*.so), check PLACEHOLDER for details
 
 
-3. update face beautify module(aar) at libvideoprp
+3. update face beautify module(aar) at libvideoprp, check PLACEHOLDER for details
 
 
 Gradle build instructions
