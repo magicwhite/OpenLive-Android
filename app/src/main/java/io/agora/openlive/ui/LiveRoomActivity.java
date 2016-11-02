@@ -79,6 +79,11 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
             @Override
             public void onItemDoubleClick(View v, Object item) {
                 log.debug("onItemDoubleClick " + v + " " + item);
+
+                if (mUidsList.size() < 2) {
+                    return;
+                }
+
                 if (mViewType == VIEW_TYPE_DEFAULT)
                     switchToSmallVideoView(((VideoStatusData) item).mUid);
                 else
