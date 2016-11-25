@@ -13,7 +13,7 @@ android {
         minSdkVersion 16 // JELLY_BEAN
         targetSdkVersion 25
         versionCode 8
-        versionName "1.7.2"
+        versionName "1.7.x"
 
         jackOptions {
             enabled true
