@@ -29,7 +29,7 @@ public class VideoStatusData {
     @Override
     public String toString() {
         return "VideoStatusData{" +
-                "mUid=" + mUid +
+                "mUid=" + (mUid & 0xFFFFFFFFL) +
                 ", mView=" + mView +
                 ", mStatus=" + mStatus +
                 ", mVolume=" + mVolume +

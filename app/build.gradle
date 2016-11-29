@@ -6,7 +6,7 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         applicationId "io.agora.openlive"
@@ -17,6 +17,10 @@ android {
 
         jackOptions {
             enabled true
+        }
+
+        ndk {
+            abiFilters "armeabi-v7a", "x86" // DO NOT MODIFY THIS LINE, IT'S UPDATED BY BUILD MACHINE AUTOMATICALLY.
         }
     }
 
@@ -44,9 +48,9 @@ dependencies {
 
     compile project(':libvideoprp')
 
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:support-v4:25.0.0'
-    compile 'com.android.support:design:25.0.0'
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:support-v4:25.0.1'
+    compile 'com.android.support:design:25.0.1'
     compile 'org.slf4j:slf4j-api:1.7.21'
     compile 'com.github.tony19:logback-android-core:1.1.1-5'
     compile('com.github.tony19:logback-android-classic:1.1.1-5') {
