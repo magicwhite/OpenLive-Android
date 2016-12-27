@@ -262,9 +262,6 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
                     doShowButtons(false);
                 }
             }, 1000); // wait for reconfig engine
-
-            rtcEngine().muteLocalVideoStream(false);
-            rtcEngine().muteLocalAudioStream(false);
         } else {
             stopInteraction(currentHostCount, uid);
         }
@@ -286,8 +283,6 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
                 doShowButtons(false);
             }
         }, 1000); // wait for reconfig engine
-
-        rtcEngine().muteLocalAudioStream(true);
     }
 
     private void doRenderRemoteUi(final int uid) {
@@ -342,12 +337,6 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
                 SoftReference<SurfaceView> surfaceV = mUidsList.remove(0);
                 if (surfaceV != null) {
                     mUidsList.put(uid, surfaceV);
-                }
-
-                if (isBroadcaster) {
-                    rtcEngine().muteLocalAudioStream(false);
-                } else {
-                    rtcEngine().muteLocalAudioStream(true);
                 }
 
                 worker().getRtcEngine().setEnableSpeakerphone(true);
